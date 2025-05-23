@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>GPM | إعلانات ممولة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1em;
+        }
+
+        .memo {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px;
+        }
+
+        .memo textarea {
+            width: 100%;
+            height: 150px;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        .ads-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .ad-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            transition: 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .ad-card:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .ad-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .ad-description {
+            font-size: 0.95em;
+        }
+
+        .add-to-cart {
+            margin-top: 10px;
+            background-color: #1abc9c;
+            border: none;
+            padding: 10px 15px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart {
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📢 إعلانات GPM الممولة</h1>
+        <p>أفضل العروض والإعلانات الحصرية لك!</p>
+    </header>
+
+    <div class="contact-info">
+        <p>📞 رقم الهاتف: 01113480099</p>
+        <p>📍 العنوان: 7 شارع أحمد حافظ عوض، بجوار كنيسة العدرا، روض الفرج</p>
+        <p>🔗 صفحة فيسبوك: GPM for Classic and Casual Wear</p>
+    </div>
+
+    <div class="memo">
+        <h2>📝 مذكرة</h2>
+        <textarea id="memo" placeholder="اكتب ملاحظاتك هنا..."></textarea>
+    </div>
+
+    <div class="ads-container" id="adsContainer">
+        <!-- المنتجات سيتم إدخالها بالكود -->
+    </div>
+
+    <div class="cart">
+        <h2>🛒 السلة</h2>
+        <ul id="cartList"></ul>
+        <button onclick="sendOrder('facebook')">📤 إرسال الطلب عبر فيسبوك</button>
+        <button onclick="sendOrder('whatsapp')">📤 إرسال الطلب عبر واتساب</button>
+    </div>
+
+    <footer>
+        © 2025 GPM - جميع الحقوق محفوظة.
+    </footer>
+
+    <script>
+        const memo = document.getElementById('memo');
+        memo.value = localStorage.getItem('memoContent') || '';
+        memo.addEventListener('input', () => {
+            localStorage.setItem('memoContent', memo.value);
+        });
+
+        const products = [
+            { title: "👕 تيشيرت قطن أوفر سايز", desc: "خامة قطن 100% من قطونيل، مقاسات متنوعة." },
+            { title: "👖 بنطلون غطس مستورد", desc: "مقاسات من لارج حتى 5 إكس." },
+            { title: "👖 بنطلون صاعقة لارج واكس", desc: "بخامة غطس مستورد - السعر 250 جنيه" },
+            { title: "👖 شورت أطفال ميلتون قطن", desc: "للأعمار من 12 إلى 16 سنة." },
+            { title: "🎁 عرض 3 قطع بسعر الجملة", desc: "بنطلون شتوي وبنطلون خريفي." },
+            { title: "🩳 برمودة رجالي صيفي", desc: "خامة قطن مريحة، متوفرة بمقاسات متعددة وسعر خاص 180 جنيه" }
+        ];
+
+        const adsContainer = document.getElementById('adsContainer');
+        const cart = [];
+
+        products.forEach((prod, index) => {
+            const card = document.createElement('div');
+            card.className = 'ad-card';
+            card.innerHTML = `
+                <div class="ad-title">${prod.title}</div>
+                <div class="ad-description">${prod.desc}</div>
+                <button class="add-to-cart" onclick="addToCart(${index})">أضف للسلة</button>
+            `;
+            adsContainer.appendChild(card);
+        });
+
+        function addToCart(index) {
+            cart.push(products[index].title);
+            updateCart();
+        }
+
+        function updateCart() {
+            const list = document.getElementById('cartList');
+            list.innerHTML = '';
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                list.appendChild(li);
+            });
+        }
+
+        function sendOrder(platform) {
+            const message = encodeURIComponent("طلب شراء من موقع GPM:\n" + cart.join("\n"));
+            if (platform === 'facebook') {
+                window.open("https://www.facebook.com/GPMforClassicAndCasualWear", '_blank');
+            } else if (platform === 'whatsapp') {
+                window.open("https://wa.me/201113480099?text=" + message, '_blank');
+            }
+        }
+    </script>
+
+</body>
+</html>
