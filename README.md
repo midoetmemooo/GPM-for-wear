@@ -108,7 +108,7 @@
     </header>
 
     <div class="contact-info">
-        <p>📞 رقم الهاتف: 01113480099</p>
+        <p>📞 رقم الهاتف: 01119480099</p>
         <p>📍 العنوان: 7 شارع أحمد حافظ عوض، بجوار كنيسة العدرا، روض الفرج</p>
         <p>🔗 صفحة فيسبوك: GPM for Classic and Casual Wear</p>
     </div>
@@ -183,7 +183,7 @@
             if (platform === 'facebook') {
                 window.open("https://www.facebook.com/GPMforClassicAndCasualWear", '_blank');
             } else if (platform === 'whatsapp') {
-                window.open("https://wa.me/201113480099?text=" + message, '_blank');
+                window.open("https://wa.me/201119480099?text=" + message, '_blank');
             }
         }
     </script>
