@@ -1,4 +1,5 @@
-<html lang="ar">
+ر<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <title>GPM | إعلانات ممولة</title>
@@ -20,6 +21,21 @@
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
+        }
+
+        .language-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .language-toggle button {
+            background-color: #3498db;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         .contact-info {
@@ -73,6 +89,13 @@
 
         .ad-description {
             font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+
+        .ad-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
 
         .add-to-cart {
@@ -92,6 +115,16 @@
             border-radius: 10px;
         }
 
+        .cart button.remove-all {
+            margin-top: 10px;
+            background-color: #e74c3c;
+            border: none;
+            padding: 10px 15px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -103,30 +136,33 @@
 <body>
 
     <header>
-        <h1>📢 إعلانات GPM الممولة</h1>
-        <p>أفضل العروض والإعلانات الحصرية لك!</p>
+        <h1 id="mainTitle">📢 إعلانات GPM الممولة</h1>
+        <p id="mainSubtitle">أفضل العروض والإعلانات الحصرية لك!</p>
     </header>
 
+    <div class="language-toggle">
+        <button onclick="toggleLanguage()">🌐 English</button>
+    </div>
+
     <div class="contact-info">
-        <p>📞 رقم الهاتف: 01119480099</p>
-        <p>📍 العنوان: 7 شارع أحمد حافظ عوض، بجوار كنيسة العدرا، روض الفرج</p>
-        <p>🔗 صفحة فيسبوك: GPM for Classic and Casual Wear</p>
+        <p id="phone">📞 رقم الهاتف: 01119480099</p>
+        <p id="address">📍 العنوان: 7 شارع أحمد حافظ عوض، بجوار كنيسة العدرا، روض الفرج</p>
+        <p id="facebook">🔗 صفحة فيسبوك: GPM for Classic and Casual Wear</p>
     </div>
 
     <div class="memo">
-        <h2>📝 مذكرة</h2>
+        <h2 id="memoTitle">📝 مذكرة</h2>
         <textarea id="memo" placeholder="اكتب ملاحظاتك هنا..."></textarea>
     </div>
 
-    <div class="ads-container" id="adsContainer">
-        <!-- المنتجات سيتم إدخالها بالكود -->
-    </div>
+    <div class="ads-container" id="adsContainer"></div>
 
     <div class="cart">
-        <h2>🛒 السلة</h2>
+        <h2 id="cartTitle">🛒 السلة</h2>
         <ul id="cartList"></ul>
         <button onclick="sendOrder('facebook')">📤 إرسال الطلب عبر فيسبوك</button>
         <button onclick="sendOrder('whatsapp')">📤 إرسال الطلب عبر واتساب</button>
+        <button class="remove-all" onclick="clearCart()">❌ إفراغ السلة</button>
     </div>
 
     <footer>
@@ -139,35 +175,61 @@
         memo.addEventListener('input', () => {
             localStorage.setItem('memoContent', memo.value);
         });
-
+    
         const products = [
-            { title: "👕 تيشيرت قطن أوفر سايز", desc: "خامة قطن 100% من قطونيل، مقاسات متنوعة." },
-            { title: "👖 بنطلون غطس مستورد", desc: "مقاسات من لارج حتى 5 إكس." },
-            { title: "👖 بنطلون صاعقة لارج واكس", desc: "بخامة غطس مستورد - " },
-            { title: "👖 شورت أطفال ميلتون قطن", desc: "للأعمار من 12 إلى 16 سنة." },
-            { title: "🎁 عرض 3 قطع بسعر الجملة", desc: "بنطلون شتوي وبنطلون خريفي." },
-            { title: "🩳 برمودة رجالي صيفي", desc: "خامة قطن مريحة، متوفرة بمقاسات متعددة " }
+            {
+                title: "شروال رجالي قطن صيفي",
+                desc: "شروال رجالي بخامة قطنية مريحة، مناسب للارتداء اليومي في الصيف. متوفر بجميع المقاسات.",
+                img: "https://via.placeholder.com/200x250?text=شروال"
+            },
+            {
+                title: "تونيك نسائي كلاسيكي",
+                desc: "تونيك أنيق بتصميم عصري، مناسب للمناسبات الكاجوال والرسمية، متوفر بألوان متعددة.",
+                img: "https://via.placeholder.com/200x250?text=تونيك"
+            },
+            {
+                title: "شورت رجالي ",
+                desc: "شورت مريح وخفيف، مثالي للاسترخاء، خامة ممتازة.",
+                img: "https://via.placeholder.com/200x250?text=شورت"
+            },
+            {
+                title: "بنطلون CY نسائي",
+                desc: "بنطلون نسائي بخامة CY اللامعة، ستايل عصري ومناسب للخروج.",
+                img: "https://via.placeholder.com/200x250?text=بنطلون+CY"
+            },
+            {
+                title: "برمودة صيفي للرجال",
+                desc: "برمودة مريحة، قماش ناعم وخفيف، مثالية لأيام الصيف الحارة.",
+                img: "https://via.placeholder.com/200x250?text=برمودة"
+            },
+            {
+                title: "تشيرت بولو كلاسيكي",
+                desc: "تشيرت بولو أنيق مناسب للعمل والمناسبات، بيكا قطن ، ألوان ثابتة.",
+                img: "https://via.placeholder.com/200x250?text=بولو"
+            }
+         
         ];
-
+    
         const adsContainer = document.getElementById('adsContainer');
         const cart = [];
-
+    
         products.forEach((prod, index) => {
             const card = document.createElement('div');
             card.className = 'ad-card';
             card.innerHTML = `
+                <img class="ad-image" src="${prod.img}" alt="${prod.title}" />
                 <div class="ad-title">${prod.title}</div>
                 <div class="ad-description">${prod.desc}</div>
                 <button class="add-to-cart" onclick="addToCart(${index})">أضف للسلة</button>
             `;
             adsContainer.appendChild(card);
         });
-
+    
         function addToCart(index) {
             cart.push(products[index].title);
             updateCart();
         }
-
+    
         function updateCart() {
             const list = document.getElementById('cartList');
             list.innerHTML = '';
@@ -177,7 +239,12 @@
                 list.appendChild(li);
             });
         }
-
+    
+        function clearCart() {
+            cart.length = 0;
+            updateCart();
+        }
+    
         function sendOrder(platform) {
             const message = encodeURIComponent("طلب شراء من موقع GPM:\n" + cart.join("\n"));
             if (platform === 'facebook') {
@@ -186,7 +253,23 @@
                 window.open("https://wa.me/201119480099?text=" + message, '_blank');
             }
         }
+    
+        function toggleLanguage() {
+            const isArabic = document.documentElement.lang === 'ar';
+            document.documentElement.lang = isArabic ? 'en' : 'ar';
+            document.documentElement.dir = isArabic ? 'ltr' : 'rtl';
+            document.getElementById('mainTitle').innerText = isArabic ? '📢 GPM Sponsored Ads' : '📢 إعلانات GPM الممولة';
+            document.getElementById('mainSubtitle').innerText = isArabic ? 'Best offers and exclusive promotions for you!' : 'أفضل العروض والإعلانات الحصرية لك!';
+            document.getElementById('phone').innerText = isArabic ? '📞 Phone: 01119480099' : '📞 رقم الهاتف: 01119480099';
+            document.getElementById('address').innerText = isArabic ? '📍 Address: 7 Ahmed Hafez Awad St., beside the Virgin Church, Rod El Farag' : '📍 العنوان: 7 شارع أحمد حافظ عوض، بجوار كنيسة العدرا، روض الفرج';
+            document.getElementById('facebook').innerText = isArabic ? '🔗 Facebook Page: GPM for Classic and Casual Wear' : '🔗 صفحة فيسبوك: GPM for Classic and Casual Wear';
+            document.getElementById('memoTitle').innerText = isArabic ? '📝 Notes' : '📝 مذكرة';
+            document.getElementById('memo').placeholder = isArabic ? 'Write your notes here...' : 'اكتب ملاحظاتك هنا...';
+            document.getElementById('cartTitle').innerText = isArabic ? '🛒 Cart' : '🛒 السلة';
+        }
     </script>
+    
 
 </body>
 </html>
+
